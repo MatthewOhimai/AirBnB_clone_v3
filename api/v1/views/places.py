@@ -19,7 +19,7 @@ def places_by_city(city_id):
     for obj in city_obj.places:
         place_l.append(obj.to_json())
 
-    return jsonify(place_list)
+    return jsonify(place_l)
 
 
 @app_views.route("/cities/<city_id>/places", methods=["POST"],

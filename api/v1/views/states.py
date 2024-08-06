@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-route for handling State objects and operations
+route for handling State objects and their operations
 """
 from flask import jsonify, abort, request
 from api.v1.views import app_views, storage
@@ -13,12 +13,12 @@ def state_get_all():
     retrieves all State objects
     :return: json of all states
     """
-    state_list = []
+    state_lists = []
     state_obj = storage.all("State")
     for obj in state_obj.values():
-        state_list.append(obj.to_json())
+        state_lists.append(obj.to_json())
 
-    return jsonify(state_list)
+    return jsonify(state_lists)
 
 
 @app_views.route("/states", methods=["POST"], strict_slashes=False)
