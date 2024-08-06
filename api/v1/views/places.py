@@ -11,13 +11,13 @@ from models.place import Place
                  strict_slashes=False)
 def places_by_city(city_id):
     """
-    retrieves all Place objects by city
-    :return: json of all Places
+    retrieves all Places objects by city
+    :return the json of all Places
     """
-    place_list = []
+    place_l = []
     city_obj = storage.get("City", str(city_id))
     for obj in city_obj.places:
-        place_list.append(obj.to_json())
+        place_l.append(obj.to_json())
 
     return jsonify(place_list)
 
@@ -26,24 +26,24 @@ def places_by_city(city_id):
                  strict_slashes=False)
 def place_create(city_id):
     """
-    create place route
+    create a place route
     :return: newly created Place obj
     """
-    place_json = request.get_json(silent=True)
-    if place_json is None:
+    place_j = request.get_json(silent=True)
+    if place_j is None:
         abort(400, 'Not a JSON')
-    if not storage.get("User", place_json["user_id"]):
+    if not storage.get("User", place_j["user_id"]):
         abort(404)
     if not storage.get("City", city_id):
         abort(404)
-    if "user_id" not in place_json:
+    if "user_id" not in place_j:
         abort(400, 'Missing user_id')
-    if "name" not in place_json:
+    if "name" not in place_j:
         abort(400, 'Missing name')
 
-    place_json["city_id"] = city_id
+    place_j["city_id"] = city_id
 
-    new_place = Place(**place_json)
+    new_place = Place(**place_j)
     new_place.save()
     resp = jsonify(new_place.to_json())
     resp.status_code = 201
@@ -76,9 +76,9 @@ def place_put(place_id):
     :param place_id: Place object ID
     :return: Place object and 200 on success, or 400 or 404 on failure
     """
-    place_json = request.get_json(silent=True)
+    place_j = request.get_json(silent=True)
 
-    if place_json is None:
+    if place_j is None:
         abort(400, 'Not a JSON')
 
     fetched_obj = storage.get("Place", str(place_id))
@@ -86,7 +86,7 @@ def place_put(place_id):
     if fetched_obj is None:
         abort(404)
 
-    for key, val in place_json.items():
+    for key, val in place_j.items():
         if key not in ["id", "created_at", "updated_at", "user_id", "city_id"]:
             setattr(fetched_obj, key, val)
 
@@ -99,7 +99,7 @@ def place_put(place_id):
                  strict_slashes=False)
 def place_delete_by_id(place_id):
     """
-    deletes Place by id
+    deletes the Place by id
     :param place_id: Place object id
     :return: empty dict with 200 or 404 if not found
     """
